@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+       <template id="report_purchaseorder_document_inherited" inherit_id="purchase.report_purchaseorder_document">
+
+           <!--replacing whole row div with client and seller information-->
+            <xpath expr="//div[hasclass('page')]/div[hasclass('row')]" position="replace">
+                   <div class="row mt32 mb32">
+
+
+                         <div class="col-xs-6">
+                        <div name="purchase_order_address">
+                                     <strong>Bill to:</strong>
+                            <br/>
+
+                            <p style="margin:0px;padding:0px;"><t t-esc="o.company_id.partner_id.name"/></p>
+                            <address t-field="o.company_id.partner_id"
+                                t-options='{"widget": "contact", "fields": ["address"], "no_marker": True}' />
+                        </div>
+                    </div>  <div class="col-xs-6 col-xs-offset-1"  style="float:right;margin-top: -120px;">
+                    <div t-field="o.partner_id"
+                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                        <p t-if="o.partner_id.vat"><t t-esc="o.company_id.country_id.vat_label or 'TIN'"/>: <span t-field="o.partner_id.vat"/></p>
+                </div>
+                <div class="col-xs-6">
+                    <strong>Ship to:</strong>
+                    <div t-if="o.dest_address_id">
+                        <div t-field="o.dest_address_id"
+                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                    <div t-if="not o.dest_address_id and o.picking_type_id.warehouse_id">
+                        <span t-field="o.picking_type_id.warehouse_id.name"/>
+                        <div t-field="o.picking_type_id.warehouse_id.partner_id"
+                            t-options='{"widget": "contact", "fields": ["address", "phone"], "no_marker": True, "phone_icons": True}'/>
+                    </div>
+                </div>
+                   </div>
+                  <div class="row mt32 mb32">
+                 <div t-if="o.payment_term_id" class="col-xs-3" style="float:right; position: relative;
+    right: 0px; top: 145px;">
+                           <strong>Payment Terms:</strong>
+                           <p t-field="o.payment_term_id"/>
+             </div>  </div>
+            </xpath>
+            <!--extra fileds between addresses and invoice lines-->
+
+       </template>
+
+    </data>
+</odoo>
